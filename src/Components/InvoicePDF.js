@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page, Text, View, Document, StyleSheet, PDFViewer, Font } from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, PDFViewer,Image, Font } from '@react-pdf/renderer';
 import { pdf } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 
@@ -141,6 +141,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },
+  signatureSection: {
+    marginTop: 50, // Adjust this value for more or less space above
+    alignItems: 'flex-end', // Aligns content to the right side
+  },
+  signatureText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    textAlign: 'right',
+  },
+  signatureImage: {
+    width: 80, // Width of the signature image
+    height: 40, // Height of the signature image
+    marginTop: 10, // Adjust for spacing between text and image
+  },
 });
 
 const InvoicePDF = ({ invoiceData, totals, totalAmountInWords, bankDetails }) => (
@@ -241,6 +255,13 @@ const InvoicePDF = ({ invoiceData, totals, totalAmountInWords, bankDetails }) =>
             Amount in Words: {totalAmountInWords}
           </Text>
         </View>
+      </View>
+      <View style={styles.signatureSection}>
+      <Image
+  style={styles.signatureImage}
+  src="https://drive.google.com/uc?export=view&id=1u_gm7Otu9ZwQ0dKZX7iStxuGFO6u-vzW"
+/>
+        <Text style={styles.signatureText}>Signature</Text>
       </View>
     </Page>
   </Document>

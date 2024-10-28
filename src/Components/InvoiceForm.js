@@ -139,11 +139,11 @@ const InvoiceForm = () => {
     generatePDF(invoiceData, totals, totalAmountInWords, bankDetails);
   };
   const bankDetails = {
-    bankName: 'Your Bank Name',
-    accountNumber: '1234567890',
-    ifscCode: 'BANK0001234',
-    branch: 'Branch Name',
-    accountHolderName: 'Account Holder Name',
+    bankName: 'ICICI Bank',
+    accountNumber: '416605000083',
+    ifscCode: 'ICIC0004166',
+    branch: 'Kukatpally,Hyderabad',
+    accountHolderName: 'GR SYMBOLS & DIGITALS',
   };
   const tableStyles = {
     // Reduced cell padding
@@ -437,8 +437,8 @@ const InvoiceForm = () => {
             <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '12px', marginBottom: '8px' }}>
               Bank Details:
             </Typography>
-            <Typography sx={{ fontSize: '10px' }}>{bankDetails.bankName}</Typography>
-            <Typography sx={{ fontSize: '10px' }}>{bankDetails.accountHolderName}</Typography>
+            <Typography sx={{ fontSize: '10px' }}>Bank name:{bankDetails.bankName}</Typography>
+            <Typography sx={{ fontSize: '10px' }}>Account Holder Name:{bankDetails.accountHolderName}</Typography>
             <Typography sx={{ fontSize: '10px' }}>Account Number: {bankDetails.accountNumber}</Typography>
             <Typography sx={{ fontSize: '10px' }}>IFSC Code: {bankDetails.ifscCode}</Typography>
             <Typography sx={{ fontSize: '10px' }}>Branch: {bankDetails.branch}</Typography>
@@ -459,7 +459,11 @@ const InvoiceForm = () => {
             </Box>
           </Grid>
         </Grid>
-        {/* Bank Details */}
+        <Grid item xs={12}>
+  <Typography sx={{ textAlign: 'right', mt: 2, mr: 2 }}>
+    Signature
+  </Typography>
+</Grid>
         
       </Grid>
       <Grid container spacing={2} sx={{ mt: 2 }}>
