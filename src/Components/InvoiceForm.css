@@ -1,0 +1,133 @@
+/* InvoiceForm.css */
+.invoice-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  font-size: 0.5rem;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+}
+/* Add these styles to your existing InvoiceForm.css */
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.company-logo {
+  width: 150px;
+}
+
+.company-logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.invoice-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  flex-grow: 1;
+  color: red;
+}
+
+
+.gst-info {
+  width: 150px;
+  text-align: right;
+}
+
+.gst-info p {
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+h2, h4 {
+  margin-bottom: 10px;
+}
+
+.main-layout {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.address-container {
+  width: 48%; /* Adjust width for address section */
+}
+
+.company-info, .shipping-info {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"], input[type="number"], input[type="date"], select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.invoice-info {
+  width: 48%; /* Adjust width for invoice details section */
+}
+
+.line-items {
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table, th, td {
+  border: 1px solid #ccc;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.summary-layout {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.bank-details {
+  width: 48%; /* Left side for bank details */
+}
+
+.totals-section {
+  width: 48%; /* Right side for totals */
+  text-align: right;
+}
+
+.signature {
+  margin-top: 20px;
+  text-align: right;
+}
