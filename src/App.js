@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 // Import the components for InvoiceForm and VoiceRecorder
 import InvoiceForm from './Components/InvoiceForm';
 import VoiceRecorder from './Components//VoiceRecorder';
+import EstimationForm from './Components/EstimationForm';
+import DeliveryChallanForm from './Components/DeliveryChallanForm';
 
 function Home() {
     const navigate = useNavigate();
@@ -12,6 +14,12 @@ function Home() {
     const handleCreateInvoice = () => {
         navigate('/invoiceform');
     };
+    const handleCreateEstimation = () => {
+      navigate('/estimationform');
+  };
+  const handleCreateChallan = () => {
+    navigate('/deliverychallan');
+};
 
     // Function to navigate to the VoiceRecorder page
     const handleTeluguToEnglish = () => {
@@ -24,6 +32,12 @@ function Home() {
             <div style={styles.buttonContainer}>
                 <button style={styles.button} onClick={handleCreateInvoice}>
                     Create Invoice
+                </button>
+                <button style={styles.button} onClick={handleCreateEstimation}>
+                    Create Estimation
+                </button>
+                <button style={styles.button} onClick={handleCreateChallan}>
+                    Create Delivery Challan
                 </button>
                 <button style={styles.button} onClick={handleTeluguToEnglish}>
                     Telugu to English
@@ -66,6 +80,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/invoiceform" element={<InvoiceForm />} />
                 <Route path="/voicerecorder" element={<VoiceRecorder />} />
+                <Route path="/estimationform" element={<EstimationForm />} />
+                <Route path="/deliverychallan" element={<DeliveryChallanForm />} />
             </Routes>
         </Router>
     );

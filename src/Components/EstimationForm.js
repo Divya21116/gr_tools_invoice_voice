@@ -10,22 +10,22 @@ import logoImage from '../assets/logogr.png';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { generatePDF } from './InvoicePDF';
-import { saveInvoiceToStorage, getLastInvoiceNumber } from './InvoiceStorage';
-const InvoiceForm = () => {
+import { generatePDF } from './EstimationPDF';
+import { saveEstimationToStorage, getLastEstimationNumber } from './EstimationStorage';
+const EstimationForm = () => {
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success'
   });
 
-  const [invoiceData, setInvoiceData] = useState({
+  const [estimationData, setEstimationData] = useState({
     customerName: '',
     customerSubBranchName:'',
     gstNumber:'',
     shippingAddress: '',
-    invoiceNumber: '',
-    invoiceDate: new Date().toISOString().slice(0, 10),
+    estimationNumber: '',
+    estimationDate: new Date().toISOString().slice(0, 10),
     dueDate: '',
     items: [
       { description: '', width: 0, height: 0, qty: 1, unit: 'inches', rate: 0, amount: 0, cgst: 0, sgst: 0 },
@@ -34,48 +34,47 @@ const InvoiceForm = () => {
 
   // Initialize invoice number when component mounts
   useEffect(() => {
-    const newInvoiceNumber = getLastInvoiceNumber();
-    setInvoiceData(prev => ({
-      ...prev,
-      invoiceNumber: newInvoiceNumber
+    const newEtimationNumber = getLastEstimationNumber();
+    setEstimationData(prev => ({      ...prev,
+      estimationNumber: newEtimationNumber
     }));
   }, []);
 
-  const handleSaveInvoice = () => {
+  const handleSaveEstimation = () => {
     // Add timestamp for sorting/reference
-    const invoiceToSave = {
-      ...invoiceData,
+    const estimationToSave = {
+      ...estimationData,
       timestamp: new Date().toISOString(),
       totals: calculateTotals()
     };
 
-    if (saveInvoiceToStorage(invoiceToSave)) {
+    if (saveEstimationToStorage(estimationToSave)) {
       setSnackbar({
         open: true,
-        message: 'Invoice saved successfully!',
+        message: 'Estimation saved successfully!',
         severity: 'success'
       });
 
-      // Reset form with new invoice number
+   
       resetForm();
     } else {
       setSnackbar({
         open: true,
-        message: 'Error saving invoice',
+        message: 'Error saving estimation',
         severity: 'error'
       });
     }
   };
 
   const resetForm = () => {
-    const newInvoiceNumber = getLastInvoiceNumber();
-    setInvoiceData({
+    const newEstimationNumber = getLastEstimationNumber();
+    setEstimationData({
       customerName: '',
       customerSubBranchName:'',
       gstNumber:'',
       shippingAddress: '',
-      invoiceNumber: newInvoiceNumber,
-      invoiceDate: new Date().toISOString().slice(0, 10),
+      estimationNumber: newEstimationNumber,
+      estimationDate: new Date().toISOString().slice(0, 10),
       dueDate: '',
       items: [
         { description: '', width: 0, height: 0, qty: 1, unit: 'inches', rate: 0, amount: 0, cgst: 0, sgst: 0 },
@@ -86,7 +85,7 @@ const InvoiceForm = () => {
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    const items = [...invoiceData.items];
+    const items = [...estimationData.items];
 
     // Update item fields dynamically
     items[index][name] = value;
@@ -106,11 +105,11 @@ const InvoiceForm = () => {
     const sgst = amount * 0.09;
 
     items[index] = { ...items[index], amount, cgst, sgst };
-    setInvoiceData({ ...invoiceData, items });
+    setEstimationData({ ...estimationData, items });
   };
 
   const addItem = () => {
-    setInvoiceData(prevState => ({
+    setEstimationData(prevState => ({
       ...prevState,
       items: [
         ...prevState.items,
@@ -120,9 +119,9 @@ const InvoiceForm = () => {
   };
 
   const calculateTotals = () => {
-    const subtotal = invoiceData.items.reduce((acc, item) => acc + (item.amount || 0), 0);
-    const totalCgst = invoiceData.items.reduce((acc, item) => acc + (item.cgst || 0), 0);
-    const totalSgst = invoiceData.items.reduce((acc, item) => acc + (item.sgst || 0), 0);
+    const subtotal = estimationData.items.reduce((acc, item) => acc + (item.amount || 0), 0);
+    const totalCgst = estimationData.items.reduce((acc, item) => acc + (item.cgst || 0), 0);
+    const totalSgst = estimationData.items.reduce((acc, item) => acc + (item.sgst || 0), 0);
     const totalAmount = subtotal + totalCgst + totalSgst;
 
     return { subtotal, totalCgst, totalSgst, totalAmount };
@@ -130,7 +129,7 @@ const InvoiceForm = () => {
 
   const totals = calculateTotals();
   const totalAmountInWords = numberToWords(Math.round(totals.totalAmount));
-  const invoiceRef = useRef(null);
+  const estimationRef = useRef(null);
 
   // const generatePDF = async () => {
   //   const element = invoiceRef.current;
@@ -146,7 +145,7 @@ const InvoiceForm = () => {
   //   pdf.save('invoice.pdf');
   // };
   const handleGeneratePDF = () => {
-    generatePDF(invoiceData, totals, totalAmountInWords, bankDetails);
+    generatePDF(estimationData, totals, totalAmountInWords, bankDetails);
   };
   const bankDetails = {
     bankName: 'ICICI Bank',
@@ -179,28 +178,28 @@ const InvoiceForm = () => {
     }
   };
   const deleteItem = (index) => {
-    setInvoiceData(prevState => ({
+    setEstimationData(prevState => ({
       ...prevState,
       items: prevState.items.filter((_, i) => i !== index)
     }));
   };
   const [isEditing, setIsEditing] = useState(false);
-  const [tempValue, setTempValue] = useState(invoiceData.invoiceNumber);
+  const [tempValue, setTempValue] = useState(estimationData.estimationNumber);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = () => {
-    setInvoiceData(prev => ({
+    setEstimationData(prev => ({
       ...prev,
-      invoiceNumber: tempValue
+      estimationNumber: tempValue
     }));
     setIsEditing(false);
   };
 
   const handleCancel = () => {
-    setTempValue(invoiceData.invoiceNumber);
+    setTempValue(estimationData.estimationNumber);
     setIsEditing(false);
   };
 
@@ -213,14 +212,14 @@ const InvoiceForm = () => {
   };
   return (
     <Grid >
-      <Grid container ref={invoiceRef} sx={{ width: '70%', margin: '0 auto', padding: '20px', border: '1px solid #000', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', marginTop: '20px' }}>
+      <Grid container ref={estimationRef} sx={{ width: '70%', margin: '0 auto', padding: '20px', border: '1px solid #000', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', marginTop: '20px' }}>
         {/* Header */}
         <Grid container spacing={2} justifyContent="space-between" alignItems="center">
           <Grid item>
             <img src={logoImage} alt="Company Logo" style={{ width: '150px' }} />
           </Grid>
           <Grid item>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'red' }}>Invoice</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'red' }}>Estimation</Typography>
           </Grid>
           <Grid item>
             <Typography sx={{ fontSize: '12px' }}>GST: 36CLPG9226N1ZL</Typography>
@@ -240,8 +239,8 @@ const InvoiceForm = () => {
               fullWidth
               label="Customer Name"
               size="small"
-              value={invoiceData.customerName}
-              onChange={(e) => setInvoiceData({ ...invoiceData, customerName: e.target.value })}
+              value={estimationData.customerName}
+              onChange={(e) => setEstimationData({ ...estimationData, customerName: e.target.value })}
               sx={{ marginBottom: '10px', backgroundColor: '#fff', '& .MuiInputLabel-root': { fontSize: '10px' }, '& .MuiInputBase-input': { 
                 fontSize: '10px',
                 padding: '2px 4px',
@@ -252,8 +251,8 @@ const InvoiceForm = () => {
               fullWidth
               label="Sub Name"
               size="small"
-              value={invoiceData.customerSubBranchName}
-              onChange={(e) => setInvoiceData({ ...invoiceData, customerSubBranchName: e.target.value })}
+              value={estimationData.customerSubBranchName}
+              onChange={(e) => setEstimationData({ ...estimationData, customerSubBranchName: e.target.value })}
               sx={{ marginBottom: '10px', backgroundColor: '#fff', '& .MuiInputLabel-root': { fontSize: '10px' }, '& .MuiInputBase-input': { 
                 fontSize: '10px',
                 padding: '2px 4px',
@@ -264,8 +263,8 @@ const InvoiceForm = () => {
               fullWidth
               label="GST Number"
               size="small"
-              value={invoiceData.gstNumber}
-              onChange={(e) => setInvoiceData({ ...invoiceData, gstNumber: e.target.value })}
+              value={estimationData.gstNumber}
+              onChange={(e) => setEstimationData({ ...estimationData, gstNumber: e.target.value })}
               sx={{ marginBottom: '10px', backgroundColor: '#fff', '& .MuiInputLabel-root': { fontSize: '10px' }, '& .MuiInputBase-input': { 
                 fontSize: '10px',
                 padding: '2px 4px',
@@ -276,9 +275,9 @@ const InvoiceForm = () => {
               fullWidth
               label="Shipping Address"
               size="small"
-              value={invoiceData.shippingAddress}
+              value={estimationData.shippingAddress}
               multiline
-              onChange={(e) => setInvoiceData({ ...invoiceData, shippingAddress: e.target.value })}
+              onChange={(e) => setEstimationData({ ...estimationData, shippingAddress: e.target.value })}
               sx={{ marginBottom: '10px', backgroundColor: '#fff', '& .MuiInputLabel-root': { fontSize: '10px' }, '& .MuiInputBase-input': { 
                 fontSize: '10px',
                 padding: '2px 4px',
@@ -312,7 +311,7 @@ const InvoiceForm = () => {
       ) : (
         <>
           <Typography sx={{ fontWeight: 'bold', color: '#333', fontSize: '10px' }}>
-            Invoice Number: {invoiceData.invoiceNumber}
+            Estimation Number: {estimationData.estimationNumber}
           </Typography>
           <IconButton size="small" onClick={handleEdit} sx={{ ml: 1 }}>
             <EditIcon fontSize="small" />
@@ -324,10 +323,10 @@ const InvoiceForm = () => {
             <TextField
               fullWidth
               size="small"
-              label="Invoice Date"
+              label="Estimation Date"
               type="date"
-              value={invoiceData.invoiceDate}
-              onChange={(e) => setInvoiceData({ ...invoiceData, invoiceDate: e.target.value })}
+              value={estimationData.estimationDate}
+              onChange={(e) => setEstimationData({ ...estimationData, estimationDate: e.target.value })}
               InputLabelProps={{ shrink: true }}
               sx={{ marginBottom: '10px', backgroundColor: '#fff', '& .MuiInputLabel-root': { fontSize: '10px' }, '& .MuiInputBase-input': { fontSize: '10px' } }}
             />
@@ -338,8 +337,8 @@ const InvoiceForm = () => {
               size="small"
               label="Due Date"
               type="date"
-              value={invoiceData.dueDate}
-              onChange={(e) => setInvoiceData({ ...invoiceData, dueDate: e.target.value })}
+              value={estimationData.dueDate}
+              onChange={(e) => setEstimationData({ ...estimationData, dueDate: e.target.value })}
               InputLabelProps={{ shrink: true }}
               sx={{ marginBottom: '10px', backgroundColor: '#fff', '& .MuiInputLabel-root': { fontSize: '10px' }, '& .MuiInputBase-input': { fontSize: '10px' } }}
             />
@@ -378,7 +377,7 @@ const InvoiceForm = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {invoiceData.items.map((item, index) => (
+                {estimationData.items.map((item, index) => (
                   <TableRow key={index}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>
@@ -564,11 +563,34 @@ const InvoiceForm = () => {
             </Box>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-  <Typography sx={{ textAlign: 'right', mt: 2, mr: 2 }}>
-    Signature
-  </Typography>
+        <Grid container>
+  {/* Terms and Conditions */}
+  <Grid item xs={8}>
+    <Typography sx={{ mt: 2, ml: 2, fontSize: '0.875rem', fontWeight: 'bold' }}>
+      Terms and Conditions:
+    </Typography>
+    <Typography sx={{ ml: 2, fontSize: '0.75rem', mt: 1 }}>
+      1. Work will proceed after the confirmation of purchase order and Advance 50% amount.
+    </Typography>
+    <Typography sx={{ ml: 2, fontSize: '0.75rem', mt: 0.5 }}>
+      2. Work will be delivered within 5 to 30 Days from the PO's or Advance amount received.
+    </Typography>
+    <Typography sx={{ ml: 2, fontSize: '0.75rem', mt: 0.5 }}>
+      3. Above estimation may vary from 15 to 30 days.
+    </Typography>
+    <Typography sx={{ ml: 2, fontSize: '0.75rem', mt: 0.5 }}>
+      4. Artworks will not change after the confirmation/work started (in case of any changes, extra charges will be applicable).
+    </Typography>
+  </Grid>
+
+  {/* Signature */}
+  <Grid item xs={4}>
+    <Typography sx={{ textAlign: 'right', mt: 2, mr: 2 }}>
+      Signature
+    </Typography>
+  </Grid>
 </Grid>
+
         
       </Grid>
       <Grid container spacing={2} sx={{ mt: 2 }}>
@@ -578,16 +600,16 @@ const InvoiceForm = () => {
             color="primary" 
             onClick={handleGeneratePDF}
           >
-            Download Invoice
+            Download Estimation
           </Button>
         </Grid>
         <Grid item>
           <Button 
             variant="contained" 
             color="secondary" 
-            onClick={handleSaveInvoice}
+            onClick={handleSaveEstimation}
           >
-            Save Invoice
+            Save Estimation
           </Button>
         </Grid>
       </Grid>
@@ -609,4 +631,4 @@ const InvoiceForm = () => {
   );
 };
 
-export default InvoiceForm;
+export default EstimationForm;

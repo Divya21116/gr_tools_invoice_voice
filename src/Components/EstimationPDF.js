@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     lineHeight: 1.2,
   },
-  invoiceDetails: {
+  estimationDetails: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   bankText: {
-    fontSize: 8,
+    fontSize: 9,
     marginBottom: 2,
   },
   totals: {
@@ -165,24 +165,42 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },
+  signatureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginTop: 20,
+  },
+  termsSection: {
+    width: '75%', // Adjust width as needed
+    paddingRight: 10,
+  },
+  termsTitle: {
+    fontWeight: 'bold',
+    fontSize: 10,
+    marginBottom: 5,
+  },
+  termText: {
+    fontSize: 8,
+    marginBottom: 3,
+  },
   signatureSection: {
-    marginTop: 50, // Adjust this value for more or less space above
-    alignItems: 'flex-end', // Aligns content to the right side
+    alignItems: 'center',
+    width: '25%', // Adjust width as needed
   },
   signatureImage: {
-    width: 150,
-    height: 60,
-    objectFit: 'contain',
+    width: 80, // Adjust size as needed
+    height: 40,
+    marginBottom: 5,
   },
   signatureText: {
     fontSize: 10,
     fontWeight: 'bold',
     textAlign: 'right',
-    marginTop: 5,
   },
 });
 
-const InvoicePDF = ({ invoiceData, totals, totalAmountInWords, bankDetails, logoUrl, signatureUrl }) => (
+const EstimationPDF = ({ estimationData, totals, totalAmountInWords, bankDetails, logoUrl, signatureUrl }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       {/* Updated Header with Logo */}
@@ -194,7 +212,7 @@ const InvoicePDF = ({ invoiceData, totals, totalAmountInWords, bankDetails, logo
           />
           
         </View>
-        <Text style={styles.title}>TAX Invoice</Text>
+        <Text style={styles.title}>Estimation</Text>
         <Text style={styles.gst}>GST NO: 36CLPG9226N1ZL</Text>
       </View>
 
@@ -211,20 +229,20 @@ const InvoicePDF = ({ invoiceData, totals, totalAmountInWords, bankDetails, logo
         </View>
         <View style={styles.addressBlock}>
         <Text style={styles.customerTitle}>Customer Details:</Text>
-          <Text style={styles.addressText}>Customer Name: {invoiceData.customerName}</Text>
-          <Text style={styles.addressText}>Sub Name: {invoiceData.customerSubBranchName}</Text>
-          <Text style={styles.addressText}>GST Number: {invoiceData.gstNumber}</Text>
+          <Text style={styles.addressText}>Customer Name: {estimationData.customerName}</Text>
+          <Text style={styles.addressText}>Sub Name: {estimationData.customerSubBranchName}</Text>
+          <Text style={styles.addressText}>GST Number: {estimationData.gstNumber}</Text>
           <Text style={styles.addressTitle}>Shipping Address:</Text>
-          <Text style={styles.addressText}>{invoiceData.shippingAddress}</Text>
+          <Text style={styles.addressText}>{estimationData.shippingAddress}</Text>
           
         </View>
       </View>
 
       {/* Invoice Details */}
-      <View style={styles.invoiceDetails}>
-        <Text style={styles.addressText}>Invoice Number: {invoiceData.invoiceNumber}</Text>
-        <Text style={styles.addressText}>Invoice Date: {invoiceData.invoiceDate}</Text>
-        <Text style={styles.addressText}>Due Date: {invoiceData.dueDate}</Text>
+      <View style={styles.estimationDetails}>
+        <Text style={styles.addressText}>Estimation Number: {estimationData.estimationNumber}</Text>
+        <Text style={styles.addressText}>Estimation Date: {estimationData.estimationDate}</Text>
+        <Text style={styles.addressText}>Due Date: {estimationData.dueDate}</Text>
       </View>
 
       {/* Items Table */}
@@ -232,8 +250,8 @@ const InvoicePDF = ({ invoiceData, totals, totalAmountInWords, bankDetails, logo
         <View style={styles.tableHeader}>
           <Text style={[styles.tableCellHeader, styles.col1]}>S.No</Text>
           <Text style={[styles.tableCellHeader, styles.col2]}>Description</Text>
-          <Text style={[styles.tableCellHeader, styles.col3]}>W (ft)</Text>
-          <Text style={[styles.tableCellHeader, styles.col4]}>H (ft)</Text>
+          <Text style={[styles.tableCellHeader, styles.col3]}>Width </Text>
+          <Text style={[styles.tableCellHeader, styles.col4]}>Height</Text>
           <Text style={[styles.tableCellHeader, styles.col5]}>Qty</Text>
           <Text style={[styles.tableCellHeader, styles.col6]}>Unit</Text>
           <Text style={[styles.tableCellHeader, styles.col7]}>SFT</Text>
@@ -244,7 +262,7 @@ const InvoicePDF = ({ invoiceData, totals, totalAmountInWords, bankDetails, logo
           <Text style={[styles.tableCellHeader, styles.col12]}>Total (₹)</Text>
         </View>
 
-        {invoiceData.items.map((item, index) => (
+        {estimationData.items.map((item, index) => (
           <View style={styles.tableRow} key={index}>
             <Text style={[styles.tableCell, styles.col1]}>{index + 1}</Text>
             <View style={[styles.col2]}>
@@ -295,27 +313,48 @@ const InvoicePDF = ({ invoiceData, totals, totalAmountInWords, bankDetails, logo
       </View>
         {console.log("at image area")}
       {/* Updated Signature Section */}
-      <View style={styles.signatureSection}>
-        <Image
-          style={styles.signatureImage}
-          src={COMPANY_IMAGES.SIGNATURE}
-        />
-        <Text style={styles.signatureText}>Authorized Signatory</Text>
-      </View>
+      <View style={styles.signatureContainer}>
+  {/* Terms and Conditions Section */}
+  <View style={styles.termsSection}>
+    <Text style={styles.termsTitle}>Terms and Conditions:</Text>
+    <Text style={styles.termText}>
+      1. Work will proceed after the confirmation of purchase order and Advance 50% amount.
+    </Text>
+    <Text style={styles.termText}>
+      2. Work will be delivered within 5 to 30 Days from the PO's or Advance amount received.
+    </Text>
+    <Text style={styles.termText}>
+      3. Above estimation may vary from 15 to 30 days.
+    </Text>
+    <Text style={styles.termText}>
+      4. Artworks will not change after the confirmation/work started (in case of any changes, extra charges will be applicable).
+    </Text>
+  </View>
+
+  {/* Signature Section */}
+  <View style={styles.signatureSection}>
+    <Image
+      style={styles.signatureImage}
+      src={COMPANY_IMAGES.SIGNATURE}
+    />
+    <Text style={styles.signatureText}>Authorized Signatory</Text>
+  </View>
+</View>
+      
     </Page>
   </Document>
 );
 
 // Updated generate PDF function to include logo and signature URLs
 export const generatePDF = async (
-  invoiceData, 
+  estimationData, 
   totals, 
   totalAmountInWords, 
   bankDetails, 
 ) => {
   const blob = await pdf(
-    <InvoicePDF 
-      invoiceData={invoiceData}
+    <EstimationPDF
+      estimationData={estimationData}
       totals={totals}
       totalAmountInWords={totalAmountInWords}
       bankDetails={bankDetails}
@@ -323,7 +362,7 @@ export const generatePDF = async (
       signatureUrl="https://i.ibb.co/TqvLRWL/signature.png"
     />
   ).toBlob();
-  saveAs(blob, `invoice-${invoiceData.invoiceNumber}.pdf`);
+  saveAs(blob, `estimation-${estimationData.estimationNumber}.pdf`);
 };
 
-export default InvoicePDF;
+export default EstimationPDF;
